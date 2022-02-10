@@ -1,3 +1,5 @@
+using Application;
+using Infrastructure;
 using Application.Handlers.Test;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -8,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Reflection;
+using Infrastructure.Presistance.ApplicationSettings.Models;
 
 namespace Api
 {
@@ -15,7 +18,10 @@ namespace Api
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
+            Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
@@ -24,10 +30,9 @@ namespace Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddMediatR(typeof(Startup));
-            services.AddMediatR(typeof(TestQuery).GetTypeInfo().Assembly);
+            services.AddInfrastructure(Configuration);
+            services.AddApplication();
             services.AddMvc();
-
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
