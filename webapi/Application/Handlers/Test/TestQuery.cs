@@ -25,10 +25,12 @@ namespace Application.Handlers.Test
         public async Task<Unit> Handle(TestQuery request, CancellationToken cancellationToken)
         {
             string a = "test";
-            await _mailService.Send(new MailModel("mateuszrozpara@sourceful.nl","test","Test"));
+            Thread.Sleep(15000);
+
+            //await _mailService.Send(new MailModel("mateuszrozpara@sourceful.nl","test","Test"));
 
 
-            throw new NotImplementedException();
+            return Unit.Value;
         }
     }
 }
